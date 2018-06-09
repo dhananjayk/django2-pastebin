@@ -23,7 +23,7 @@ class PasteObject(models.Model):
     text = models.TextField()
     creation_date = models.DateTimeField(auto_now_add=True)
     expiration_date = models.DateField(default=expiration_date_default)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
         url_key = generate_url_key()
@@ -33,6 +33,10 @@ class PasteObject(models.Model):
         UsedUrlKeys.objects.create(url_key=url_key)
         self.url_key = url_key
         super(PasteObject, self).save(*args, **kwargs) # Call the real save() method
+
+    def get_absolute_url(self):
+        from django.urls import reverse
+        return reverse('get_paste', args=[str(self.url_key)])
 
     class Meta:
         """Meta definition for PasteObject."""
