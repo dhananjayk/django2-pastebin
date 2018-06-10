@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
 from .models import PasteObject
+from django.views.decorators.cache import never_cache
 
 # Create your views here.
 from .forms import PasteForm
 
-
+@never_cache
 def index(request, *args, **kwargs):
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -31,6 +32,10 @@ def index(request, *args, **kwargs):
                 return redirect('index')
         else:
             text = ''
-
+        
         form = PasteForm(initial=text)
     return render(request, 'djpaste/index.html', {'form': form},)
+
+@never_cache
+def authorize(request):
+    return redirect('index')

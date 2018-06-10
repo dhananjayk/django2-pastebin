@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="google-signin-client_id" content="348268266601-huvti1j3idltjfkl2h3klnp3c3vdsfn4.apps.googleusercontent.com">
     <title>Material Design Bootstrap</title>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -44,7 +45,11 @@
             </ul>
             <ul class="navbar-nav nav-flex-icons">
                 <li class="nav-item">
-                    <a class="nav-link"><i class="fa fa-facebook"></i></a>
+                    {% if  user.is_authenticated %}
+                        <button id="logout" type="button" class="btn btn-primary">Logout</button>
+                    {% else %}
+                        <div class=" nav-link g-signin2" id="google-plus-button"></div>
+                    {% endif %}
                 </li>
                 <li class="nav-item">
                     <a class="nav-link"><i class="fa fa-twitter"></i></a>
@@ -73,6 +78,65 @@
 <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
 <!-- MDB core JavaScript -->
 <script type="text/javascript" src="{% static 'js/mdb.min.js' %}"></script>
+<!-- JS Cookies -->
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+
+
+<script src="https://apis.google.com/js/platform.js?onload=init" async defer></script>
+<script type="text/javascript">
+    function init() {
+        gapi.load('auth2', function () {
+            var auth2;
+            
+            auth2 = gapi.auth2.init({
+                 client_id: 'YOUR-KEY-HERE'
+            });
+
+            auth2.then(function () {
+                var button = document.getElementById("google-plus-button");
+                console.log("User is signed-in in Google+ platform?", auth2.isSignedIn.get() ? "Yes" : "No");
+
+                gapi.auth2.getAuthInstance().attachClickHandler(button, {scope: 'profile email openid'}, function (googleUser) {
+                    // Send access-token to backend to finish the authenticate
+                    // with your application
+
+                    var authResponse = googleUser.getAuthResponse();
+                    var $form;
+                    var $input;
+                    var csrftoken = Cookies.get('csrftoken');
+                    $form = $("<form>");
+                    $form.attr("action", "/auth/complete/google-plus/");
+                    $form.attr("method", "post");
+                    $input = $("<input>");
+                    $input.attr("name", "id_token");
+                    $input.attr("type", "hidden");
+                    $input.attr("value", authResponse.id_token);
+                    $csrf = $("<input>");
+                    $csrf.attr("name", "csrfmiddlewaretoken");
+                    $csrf.attr("type", "hidden");
+                    $csrf.attr("value", csrftoken);
+                    $form.append($csrf);
+                    $form.append($input);
+                    // Add csrf-token if needed
+                    $(document.body).append($form);
+                    $form.submit();
+                });
+                if (gapi.auth2.getAuthInstance().isSignedIn.get()) {
+                    $('#logout').on('click', function (event) {
+                        event.preventDefault();
+                        gapi.auth2.getAuthInstance().signOut().then(function () {
+                            console.log("Logged out from Google+ platform");
+                            document.location = "/logout/";
+                        });
+                    });
+                }
+            });
+        });
+    }
+    
+    
+</script>
+
 </body>
 
 </html>
