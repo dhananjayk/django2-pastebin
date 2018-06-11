@@ -80,10 +80,14 @@
 <script type="text/javascript" src="{% static 'js/mdb.min.js' %}"></script>
 <!-- JS Cookies -->
 <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
 
 <script src="https://apis.google.com/js/platform.js?onload=init" async defer></script>
 <script type="text/javascript">
+    $(document).ready(function () {
+        $('.datepicker').datepicker('setStartDate', new Date());
+
+    })
     function init() {
         gapi.load('auth2', function () {
             var auth2;
