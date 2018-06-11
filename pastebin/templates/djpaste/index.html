@@ -7,13 +7,38 @@
         <div class="col">
             <form method="post">
                 {% csrf_token %}
-                <div class="form-group">
-                    <label for="{{ form.text.id_for_label }}">New Paste</label>
-                    {{ form.text }}
+                <div class="row">
+                    <div class="form-group col-12">
+                        <label for="{{ form.text.id_for_label }}">New Paste</label>
+                        {{ form.text }}
+                    </div>
+                    <div class="form-group col-auto">
+                        <label for="{{ form.paste_name.id_for_label }}">Paste Name</label>
+                        {{ form.paste_name }}
+                    </div>
+                    <div class="form-group col-auto">
+                        <label for="{{ form.paste_expiration.id_for_label }}">Paste Expiration Date</label>
+                        {{ form.paste_expiration }}
+                    </div>
+                    <div class="w-100"></div>
+                    <div class="form-group col-auto">
+                        <label for="{{ form.private_paste.id_for_label }}">Is the Paste Private?</label>
+                        {{ form.private_paste }}
+                    </div>
+                    <div class="w-100"></div>
+                    <div class="form-group col-auto">
+                        <label for="{{ form.syntax_highlighting.id_for_label }}">Syntax Highlighting</label>
+                        {{ form.syntax_highlighting }}
+                    </div>
+
                 </div>
-                <div class="form-group">
-                    <button class="btn btn-default" type="submit">Submit</button>
+
+                <div class="row">
+                    <div class="form-group col-auto">
+                        <button class="btn btn-default" type="submit">Submit</button>
+                    </div>
                 </div>
+
             </form>
 
         </div>

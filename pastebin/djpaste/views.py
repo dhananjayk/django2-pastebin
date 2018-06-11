@@ -5,6 +5,7 @@ from django.views.decorators.cache import never_cache
 # Create your views here.
 from .forms import PasteForm
 
+
 @never_cache
 def index(request, *args, **kwargs):
     if request.method == 'POST':
@@ -16,8 +17,15 @@ def index(request, *args, **kwargs):
             # ...
             # redirect to a new URL:
             paste_data = form.cleaned_data.get('text')
+            paste_name = form.cleaned_data.get('paste_name')
+            paste_expiration = form.cleaned_data.get('paste_expiration')
+            private_paste = form.cleaned_data.get('private_paste')
+            syntax_highlighting = form.cleaned_data.get('syntax_highlighting')
             owner = request.user if request.user.is_authenticated else None
             new_paste = PasteObject.objects.create(text=paste_data, owner=owner)
+            new_paste = PasteObject.objects.create(text=paste_data, owner=owner, paste_name=paste_name,
+                                                   expiration_date=paste_expiration,
+                                                   syntax_highlighting=syntax_highlighting, private=private_paste)
             return redirect(new_paste)
 
 
