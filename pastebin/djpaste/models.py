@@ -21,6 +21,9 @@ class PasteObject(models.Model):
     """Contains all the Pastes submitted"""
     url_key = models.CharField(unique=True, null=True, max_length=8)
     text = models.TextField()
+    private = models.BooleanField(default=False)
+    syntax_highlighting =  models.CharField(blank=True, null=True, max_length=15)
+    paste_name = models.CharField(max_length=25, default='Untitled')
     creation_date = models.DateTimeField(auto_now_add=True)
     expiration_date = models.DateField(default=expiration_date_default)
     owner = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
