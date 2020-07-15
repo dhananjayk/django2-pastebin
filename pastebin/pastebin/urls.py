@@ -15,14 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path, include
-from djpaste.views import index, authorize, show_paste
+from djpaste.views import index, authorize
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('authorize/', authorize, name='authorize'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('auth/', include('social_django.urls', namespace='social')),
-    re_path(r'^(?P<url_key>[0-9A-Za-z]{8,8})', show_paste, name='get_paste'),
+    re_path(r'^(?P<url_key>[0-9A-Za-z]{8,8})', index, name='get_paste'),
     path('admin/', admin.site.urls),
     path('', index, name='index'),
 ]
